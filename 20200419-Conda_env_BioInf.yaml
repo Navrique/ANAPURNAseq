@@ -1,0 +1,14 @@
+# @conda @bioinformatic @env
+name: BioInfo
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - fastqc
+  - multiqc
+  - bbmap
+  - sortmerna
+  - hisat2
+  - samtools
+  - subread
