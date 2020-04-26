@@ -180,7 +180,7 @@ process Filter_Low_Complexity {
     tuple x6, file(Input6) from WOConta_ch
 
   output:
-    tuple x6, file("HighComp_${x6}.fastq.gz") into LowComp
+    tuple x6, file("HighComp_${x6}.fastq") into LowComp
     file "LowComp_${x6}.fastq.gz"
   script:
     """
@@ -189,7 +189,7 @@ process Filter_Low_Complexity {
 }
 
 process Remove_rRNA{
-  memory "6 GB"
+  memory "12 GB"
   publishDir "$out/rRNA_Removal"
 
   input:
@@ -204,29 +204,40 @@ process Remove_rRNA{
     file "With_rRNA_${x7}.fastq.gz"
     file "Rm_rRNA_${x7}.log"
   script:
+
+    // """
+    //   rm -rf \$PWD/WorkDir
+    //   mkdir -p \$PWD/WorkDir
+    //   sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
+    //   --workdir \$PWD/WorkDir -threads 4 \
+    //   --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" > Rm_rRNA_${x7}.log
+    //   gzip No_rRNA_${x7}.fastq
+    //   gzip With_rRNA_${x7}.fastq
+    //   rm -rf \$PWD/WorkDir
+    // """
+    // """
+    //   rm -rf \$PWD/kvdb/
+    //   mkdir -p \$PWD/kvdb/
+    //   sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
+    //   --kvdb \$PWD/kvdb --idx $Ref_DB_Index \
+    //   --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" > Rm_rRNA_${x7}.log
+    //   gzip No_rRNA_${x7}.fastq
+    //   gzip With_rRNA_${x7}.fastq
+    //   rm -rf \$PWD/kvdb
+    // """
     """
+      mkdir -p \$PWD/DB_Index
       mkdir -p \$PWD/kvdb/
+      rsync -a --delete $Ref_DB_Index/ \$PWD/DB_Index
       rm -rf \$PWD/kvdb/
       sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
-      --kvdb \$PWD/kvdb --idx $Ref_DB_Index \
+      --kvdb \$PWD/kvdb --idx \$PWD/DB_Index \
       --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
       gzip No_rRNA_${x7}.fastq
       gzip With_rRNA_${x7}.fastq
-      rm -rf \$PWD/kvdb/
+    rm -rf \$PWD/kvdb/
+    rm -rf \$PWD/DB_Index/
     """
-    // """
-    //   mkdir -p \$PWD/DB_Index
-    //   mkdir -p \$PWD/kvdb/
-    //   rsync -a --delete $Ref_DB_Index/ \$PWD/DB_Index
-    //   rm -rf \$PWD/kvdb/
-    //   sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
-    //   --kvdb \$PWD/kvdb --idx \$PWD/DB_Index \
-    //   --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
-    //   gzip No_rRNA_${x7}.fastq
-    //   gzip With_rRNA_${x7}.fastq
-    // rm -rf \$PWD/kvdb/
-    // rm -rf \$PWD/DB_Index/
-    // """
 }
 
 // duplicate the corrected file channel NorRNA one channel for the QC, one for alignement
