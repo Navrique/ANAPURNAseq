@@ -194,7 +194,7 @@ process Remove_rRNA{
 
   input:
     tuple x7, file(Input7) from LowComp
-    val Ref_DB_Index from SortmeRNA_DBIndex_Path
+    path Ref_DB_Index from SortmeRNA_DBIndex_Path
     val Ref_Pattern from SortmeRNA_Ref_Pattern
     // val kvdb from Rm_rRNA.kvdb
     path Ref_Files from Ch_SortmeRNA_DB_File_Address.collect()
@@ -225,18 +225,25 @@ process Remove_rRNA{
     //   gzip With_rRNA_${x7}.fastq
     //   rm -rf \$PWD/kvdb
     // """
+    // """
+    //   mkdir -p \$PWD/DB_Index
+    //   mkdir -p \$PWD/kvdb/
+    //   rsync -a --delete $Ref_DB_Index/ \$PWD/DB_Index
+    //   rm -rf \$PWD/kvdb/
+    //   sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
+    //   --kvdb \$PWD/kvdb --idx \$PWD/DB_Index \
+    //   --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
+    //   gzip No_rRNA_${x7}.fastq
+    //   gzip With_rRNA_${x7}.fastq
+    // rm -rf \$PWD/kvdb/
+    // rm -rf \$PWD/DB_Index/
+    // """
     """
-      mkdir -p \$PWD/DB_Index
-      mkdir -p \$PWD/kvdb/
-      rsync -a --delete $Ref_DB_Index/ \$PWD/DB_Index
-      rm -rf \$PWD/kvdb/
-      sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
-      --kvdb \$PWD/kvdb --idx \$PWD/DB_Index \
-      --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
+      mkdir -p kvdb/
+      sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments --kvdb kvdb --idx $Ref_DB_Index -threads 4 --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
       gzip No_rRNA_${x7}.fastq
       gzip With_rRNA_${x7}.fastq
-    rm -rf \$PWD/kvdb/
-    rm -rf \$PWD/DB_Index/
+      rm -rf kvdb/
     """
 }
 
