@@ -180,11 +180,11 @@ process Filter_Low_Complexity {
     tuple x6, file(Input6) from WOConta_ch
 
   output:
-    tuple x6, file("HighComp_${x6}.fastq") into LowComp
+    tuple x6, file("HighComp_${x6}.fastq.gz") into LowComp
     file "LowComp_${x6}.fastq.gz"
   script:
     """
-    bbduk.sh in="$Input6" out=HighComp_${x6}.fastq outm=LowComp_${x6}.fastq.gz entropy=$Complex_Filter.entropy
+    bbduk.sh in="$Input6" out=HighComp_${x6}.fastq.gz outm=LowComp_${x6}.fastq.gz entropy=$Complex_Filter.entropy
     """
 }
 
@@ -240,9 +240,11 @@ process Remove_rRNA{
     // """
     """
       mkdir -p kvdb/
-      sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments --kvdb kvdb --idx $Ref_DB_Index -threads 4 --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
+      zcat $Input7 > Reads.fastq
+      sortmerna $Ref_Pattern -reads Reads.fastq --num_alignments $Rm_rRNA.num_alignments --kvdb kvdb --idx $Ref_DB_Index -threads 4 --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
       gzip No_rRNA_${x7}.fastq
       gzip With_rRNA_${x7}.fastq
+      rm Reads.fastq
       rm -rf kvdb/
     """
 }

@@ -1,4 +1,4 @@
-# Nextflow pipeline for RNAseq read filtering and read count
+# ANAPURRNAseq : Automated Nexflow Alignement Pipeline for Uncleared Reads from RNAseq
 
 > #Bioinformatics #pipeline 
 
