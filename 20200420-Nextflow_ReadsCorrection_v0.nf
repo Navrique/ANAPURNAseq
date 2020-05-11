@@ -260,8 +260,8 @@ QC_Corrected_Reads
 
 process QC {
   memory "4 GB"
-  publishDir "$out/QC_reports"
-
+  publishDir "Results/QC_reports", pattern: '*.html', mode : 'move'
+  publishDir "$out/QC_reports", pattern: '*.zip'
   input:
     tuple x, file(FileList) from Combined_Reads
     // each file(Files) from FileList
@@ -276,7 +276,7 @@ process QC {
 
 process MultiQC{
   memory "4 GB"
-  publishDir "$out/QC_reports"
+  publishDir "Results/QC_reports", mode: 'move'
 
   input:
   file Zip_Files from QC_Files_ch.collect()
@@ -328,7 +328,7 @@ process Alignement{
 // Counting the Reads mapped to the reference Genome using
 process Read_counting{
   memory "10 GB"
-  publishDir "$out/ReadCounts"
+  publishDir "Results/RawReadCounts", mode: 'move' , overwrite: true
 
   input:
   file Bam from BamFiles.collect()
