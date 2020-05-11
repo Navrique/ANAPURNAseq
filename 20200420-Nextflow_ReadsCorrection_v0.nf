@@ -327,7 +327,7 @@ process Alignement{
 
 // Counting the Reads mapped to the reference Genome using
 process Read_counting{
-  memory "4 GB"
+  memory "10 GB"
   publishDir "$out/ReadCounts"
 
   input:
