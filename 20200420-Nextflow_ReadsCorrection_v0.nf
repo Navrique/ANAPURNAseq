@@ -260,6 +260,7 @@ QC_Corrected_Reads
 
 process QC {
   memory "4 GB"
+  // publishDir "Results/QC_reports", pattern: '*.html'
   publishDir "Results/QC_reports", pattern: '*.html', mode : 'move'
   publishDir "$out/QC_reports", pattern: '*.zip'
   input:
