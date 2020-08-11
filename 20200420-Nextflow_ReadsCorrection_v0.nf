@@ -314,8 +314,9 @@ process Alignement{
 
     if( file(Hisat2_var.ReferenceGenome_Index).list().size() == 0 )
     """
-      wget $Hisat2_var.ReferenceGenome_Web | gzip -d
-      hisat2-build C_albicans_SC5314_A22_current_chromosomes_A.fasta $Hisat2_var.ReferenceGenome_Index
+      wget $Hisat2_var.ReferenceGenome_Web -O Ref.fasta.gz
+      gzip -d Ref.fasta.gz
+      hisat2-build Ref.fasta $Hisat2_var.ReferenceGenome_Index
       zcat $Files > Test.fastq
       hsat2 -x $Hisat2_var.ReferenceGenome_Index/Idx -U Test.fastq --max-intronlen $Hisat2_var.max_intronlen | samtools sort > Alignement_${x}.bam
     """
