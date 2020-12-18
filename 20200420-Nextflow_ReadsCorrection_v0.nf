@@ -23,6 +23,9 @@ Rm_rRNA=params.Rm_rRNA
 Hisat2_var=params.Hisat2
 featureCounts_Var=params.featureCounts_Var
 
+// get the species liste
+Species=params.Species
+
 // prepare a string that containing the list "-ref <fastafile>" patern that will be included in the bash command.
 SortmeRNA_Ref_Pattern="-ref ${Rm_rRNA.Ref_Databases_Name.join(" -ref " )}"
 
@@ -45,10 +48,18 @@ File_List=file(params.Input_Files)
 // Channel containing files
 File_List_ch = Channel.from(File_List)
 
-// Define file key and enclose key and file into a tuple
-File_Idx_Init_ch = Channel
-  .from(File_List)
-  .map { file -> tuple(file.getSimpleName(), file) }
+
+// if the Reads has been corrected already fill in the channel used as input for the alignement. Otherwise,
+// fill in the channel for starting the correction
+SkipCorrection= file("${PWD}/CorrectedReads/rRNA_Removal").exists()
+
+(File_Idx_Init_ch, C_Skip_Corr) = ( SkipCorrection
+                 ? [Channel.empty(), Channel
+                                       .fromPath("${PWD}/CorrectedReads/rRNA_Removal/No_rRNA*.fastq.gz")
+                                       .map { file -> tuple(file.getSimpleName(), file) }]
+                 : [Channel
+                     .from(File_List)
+                     .map { file -> tuple(file.getSimpleName(), file) }, Channel.empty()] )
 
 //Duplicate the channel with the input files liste
 File_Idx_Init_ch.into { File_Idx_ch ; File_Idx_QC_ch }
@@ -58,6 +69,93 @@ Ch_SortmeRNA_DB_File_Address=Channel
   .from(Rm_rRNA.Ref_Databases_Name)
   .map { Rm_rRNA.DB_File_Path + it}
 
+
+Channel.from(Hisat2_var.GenomeFASTAweb).into { C_Fasta; C_Fasta2}
+C_geneID=Channel.from(featureCounts_Var.g)
+C_GFF=Channel.from(featureCounts_Var.Web_Features_File)
+
+// prepare channels for the alignement
+C_Genomes=Channel
+  .from(Hisat2_var.GenomeID)
+  .merge(C_Fasta)
+
+
+C_para_Hisat2=Channel
+  .from(Hisat2_var.GenomeID)
+  .merge(Channel.from(Hisat2_var.max_intronlen))
+  .join(Channel.from(Species))
+  .toList()
+
+
+
+// C_Genomes.view()
+// C_para_Hisat2.view()
+
+C_GFF_n_gID=Channel
+  .from(Hisat2_var.GenomeID)
+  .merge(C_GFF,C_geneID )
+  .join(Channel.from(Species))
+
+
+C_Sel_Genome=C_Genomes
+  .join(Channel.from(Species))
+
+
+C_Sel_GFF=C_GFF_n_gID
+  .join(Channel.from(Species))
+
+// prepare the index folder for the alignement if required
+if( file(Hisat2_var.FolderIndx).exists() ){
+  println("Folder for Hisat2 Indx exist")
+  if (file(Hisat2_var.FolderIndx).list().size()<2){
+    newFile=file("$Hisat2_var.FolderIndx/Index.txt")
+    newFile.write("Indexing created on ")
+  }
+  CreatedIndxFolder=Hisat2_var.FolderIndx
+
+}
+else{
+  println("Creating folder for Hisat2 indexing")
+  file(Hisat2_var.FolderIndx).mkdirs()
+  CreatedIndxFolder=Hisat2_var.FolderIndx
+  newFile=file("$Hisat2_var.FolderIndx/Index.txt")
+  newFile.write("Indexing created on ")
+}
+
+Channel.fromPath("${CreatedIndxFolder}/*").into {IndxFiles; IndxFilesEmpty }
+
+// build the Hisat2 index if Requires
+process Build_index {
+  publishDir "$Hisat2_var.FolderIndx" , mode : 'copy' ,pattern : "*.ht2"
+  publishDir "$Hisat2_var.FolderIndx" , mode : 'copy' ,pattern : "*.txt"
+
+  input:
+  path FIdx from IndxFiles.collect()
+  tuple val(x),  val(Fasta) from C_Sel_Genome
+
+  output:
+  // file "*"
+  path "${x}*.ht2" into C_Index_Ini includeInputs true
+
+  script:
+  if((FIdx.name.toString() =~ /${x}/).size()==0)
+
+  """
+  echo "Gooood ${x} envoie le paté avec ${Fasta}" > output.txt
+  wget $Fasta -O ${x}_Ref.fasta.gz
+  gunzip ${x}_Ref.fasta.gz
+  hisat2-build ${x}_Ref.fasta $x -p 8
+  """
+
+  else
+  """
+  ls . > output.txt
+  """
+}
+// C_Index.view()
+C_Index_Ini.into { C_Index; C_Index2}
+
+// Hisat2_var.FolderIndx.view()
 process Clupify {
   cache true
   // setup maxmemoryused by the processes
@@ -190,7 +288,7 @@ process Filter_Low_Complexity {
 
 process Remove_rRNA{
   memory "12 GB"
-  publishDir "$out/rRNA_Removal"
+  publishDir "$out/rRNA_Removal", mode : 'copy'
 
   input:
     tuple x7, file(Input7) from LowComp
@@ -204,40 +302,6 @@ process Remove_rRNA{
     file "With_rRNA_${x7}.fastq.gz"
     file "Rm_rRNA_${x7}.log"
   script:
-
-    // """
-    //   rm -rf \$PWD/WorkDir
-    //   mkdir -p \$PWD/WorkDir
-    //   sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
-    //   --workdir \$PWD/WorkDir -threads 4 \
-    //   --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" > Rm_rRNA_${x7}.log
-    //   gzip No_rRNA_${x7}.fastq
-    //   gzip With_rRNA_${x7}.fastq
-    //   rm -rf \$PWD/WorkDir
-    // """
-    // """
-    //   rm -rf \$PWD/kvdb/
-    //   mkdir -p \$PWD/kvdb/
-    //   sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
-    //   --kvdb \$PWD/kvdb --idx $Ref_DB_Index \
-    //   --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" > Rm_rRNA_${x7}.log
-    //   gzip No_rRNA_${x7}.fastq
-    //   gzip With_rRNA_${x7}.fastq
-    //   rm -rf \$PWD/kvdb
-    // """
-    // """
-    //   mkdir -p \$PWD/DB_Index
-    //   mkdir -p \$PWD/kvdb/
-    //   rsync -a --delete $Ref_DB_Index/ \$PWD/DB_Index
-    //   rm -rf \$PWD/kvdb/
-    //   sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments \
-    //   --kvdb \$PWD/kvdb --idx \$PWD/DB_Index \
-    //   --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
-    //   gzip No_rRNA_${x7}.fastq
-    //   gzip With_rRNA_${x7}.fastq
-    // rm -rf \$PWD/kvdb/
-    // rm -rf \$PWD/DB_Index/
-    // """
     """
       mkdir -p kvdb/
       zcat $Input7 > Reads.fastq
@@ -293,55 +357,91 @@ process MultiQC{
 
 // Group "corrected reads" file by sample. This combine all replicates all together. This is because Hisat2 can combine reads from all fastq files.
 Corrected_Reads
+  .mix(C_Skip_Corr)
   .map { a, file -> tuple( (file.name.toString() =~ Pattern_getName_WOilluminaRep)[0][1] , file ) }
   .groupTuple()
   .set { Grp_CorrReads }
-  // .println()
 
-// Alignement using HiSAT2 and
-process Alignement{
-  memory "4 GB"
-  publishDir "$out/Alignement"
+
+// Alignement using HiSAT2 -> first species
+process Alignement_1{
+  // memory "4 GB"
+  publishDir "$out/Alignement/$Species"
 
   input:
+    // val Species from Hisat2_var.GenomeID[0]
+    val Species from C_para_Hisat2.val[0][0]
+    val IntroLen from C_para_Hisat2.val[0][1]
     tuple x, file(Files) from Grp_CorrReads
+    path ref from C_Index.collect()
     // path Ref_Gen from Hisat2_var.ReferenceGenome_Web
 
   output:
     // tuple x , file("Alignement_${x}.bam") into Bam_files_ch
-    file "Alignement_${x}.bam" into BamFiles
-  script:
+    tuple Species,  file("Alignement_${x}.bam") into BamFiles
+    tuple x, file("Not_Aligned_1_${x}.fastq.gz") into Align_Again
 
-    if( file(Hisat2_var.ReferenceGenome_Index).list().size() == 0 )
-    """
-      wget $Hisat2_var.ReferenceGenome_Web -O Ref.fasta.gz
-      gzip -d Ref.fasta.gz
-      hisat2-build Ref.fasta $Hisat2_var.ReferenceGenome_Index
-      zcat $Files > Test.fastq
-      hsat2 -x $Hisat2_var.ReferenceGenome_Index/Idx -U Test.fastq --max-intronlen $Hisat2_var.max_intronlen | samtools sort > Alignement_${x}.bam
-    """
-    else
+  script:
     """
       zcat $Files > Test.fastq
-      hisat2 -x $Hisat2_var.ReferenceGenome_Index/Idx -U Test.fastq --max-intronlen $Hisat2_var.max_intronlen | samtools sort > Alignement_${x}.bam
+      hisat2 -x $Species -U Test.fastq --max-intronlen $IntroLen --un-gz Not_Aligned_1_${x}.fastq.gz | samtools sort > Alignement_${x}.bam
     """
 }
+
+if (C_para_Hisat2.val.size()>1){
+  // Alignement using HiSAT2 -> second
+  process Alignement_2{
+    // memory "4 GB"
+    publishDir "$out/Alignement/$Species"
+
+    input:
+      // val Species from Hisat2_var.GenomeID[0]
+      val Species from C_para_Hisat2.val[1][0]
+      val IntroLen from C_para_Hisat2.val[1][1]
+      tuple x, file(Files) from Align_Again
+      path ref from C_Index2.collect()
+      // path Ref_Gen from Hisat2_var.ReferenceGenome_Web
+
+    output:
+      // tuple x , file("Alignement_${x}.bam") into Bam_files_ch
+      tuple Species,  file("Alignement_${x}.bam") into BamFiles2
+      file "Not_Aligned_1_${x}.fastq.gz" into Align_Again2
+
+    script:
+      """
+        zcat $Files > Test.fastq
+        hisat2 -x $Species -U Test.fastq --max-intronlen $IntroLen --un-gz Not_Aligned_1_${x}.fastq.gz | samtools sort > Alignement_${x}.bam
+      """
+  }
+}else{
+  Align_Again2=Channel.empty()
+  BamFiles2=Channel.empty()
+}
+
+Bams=BamFiles
+  .mix(BamFiles2)
+  .groupTuple()
+
+// C_Sel_GFF.view()
 
 // Counting the Reads mapped to the reference Genome using
 process Read_counting{
   memory "10 GB"
-  publishDir "Results/RawReadCounts", mode: 'move' , overwrite: true
+  publishDir "Results/ReadCounts/${Species}", mode: 'move' , overwrite: true
 
   input:
-  file Bam from BamFiles.collect()
-  path GFF_File from featureCounts_Var.Web_Features_File
+  tuple val(Species), file(Bam) from Bams
+  tuple val(SameSpecies), path(GFFs), val(g) from C_Sel_GFF
 
   output:
   file "*"
 
   script:
+  // """
+  // ls > output.txt
+  // """
   """
-    featureCounts -a $GFF_File -F $featureCounts_Var.F -o Read_Count.txt $Bam -t $featureCounts_Var.t -g $featureCounts_Var.g --extraAttributes $featureCounts_Var.extraAttributes \
+    featureCounts -a $GFFs -F $featureCounts_Var.F -o Read_Count.txt *.bam -t $featureCounts_Var.t -g $g --extraAttributes $featureCounts_Var.extraAttributes \
     -Q $featureCounts_Var.Q > Read_Stats.txt
   """
 }

@@ -1,0 +1,5 @@
+HiSAT2*
+SampleDataSet/.*
+SampleDataSet/Corre*
+SampleDataSet/Results/
+SampleDataSet/work/
