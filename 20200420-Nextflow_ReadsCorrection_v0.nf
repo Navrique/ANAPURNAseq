@@ -131,7 +131,7 @@ process Build_index {
 
   input:
   path FIdx from IndxFiles.collect()
-  tuple val(x),  val(Fasta) from C_Sel_Genome
+  tuple val(x),  path(Fasta) from C_Sel_Genome
 
   output:
   // file "*"
@@ -140,10 +140,15 @@ process Build_index {
   script:
   if((FIdx.name.toString() =~ /${x}/).size()==0)
 
+  // """
+  // echo "Gooood ${x} envoie le paté avec ${Fasta}" > output.txt
+  // wget $Fasta -O ${x}_Ref.fasta.gz
+  // gunzip ${x}_Ref.fasta.gz
+  // hisat2-build ${x}_Ref.fasta $x -p 8
+  // """
   """
   echo "Gooood ${x} envoie le paté avec ${Fasta}" > output.txt
-  wget $Fasta -O ${x}_Ref.fasta.gz
-  gunzip ${x}_Ref.fasta.gz
+  gunzip -c $Fasta > ${x}_Ref.fasta
   hisat2-build ${x}_Ref.fasta $x -p 8
   """
 
@@ -366,7 +371,10 @@ Corrected_Reads
 // Alignement using HiSAT2 -> first species
 process Alignement_1{
   // memory "4 GB"
+  memory "8 GB"
+  cpus 4
   publishDir "$out/Alignement/$Species"
+
 
   input:
     // val Species from Hisat2_var.GenomeID[0]
@@ -384,14 +392,15 @@ process Alignement_1{
   script:
     """
       zcat $Files > Test.fastq
-      hisat2 -x $Species -U Test.fastq --max-intronlen $IntroLen --un-gz Not_Aligned_1_${x}.fastq.gz | samtools sort > Alignement_${x}.bam
+      hisat2 -p 4 -x $Species -U Test.fastq --max-intronlen $IntroLen --un-gz Not_Aligned_1_${x}.fastq.gz | samtools sort > Alignement_${x}.bam
     """
 }
 
 if (C_para_Hisat2.val.size()>1){
   // Alignement using HiSAT2 -> second
   process Alignement_2{
-    // memory "4 GB"
+    memory "8 GB"
+    cpus 4
     publishDir "$out/Alignement/$Species"
 
     input:
@@ -410,7 +419,7 @@ if (C_para_Hisat2.val.size()>1){
     script:
       """
         zcat $Files > Test.fastq
-        hisat2 -x $Species -U Test.fastq --max-intronlen $IntroLen --un-gz Not_Aligned_1_${x}.fastq.gz | samtools sort > Alignement_${x}.bam
+        hisat2 -p 4 -x $Species -U Test.fastq --max-intronlen $IntroLen --un-gz Not_Aligned_1_${x}.fastq.gz | samtools sort > Alignement_${x}.bam
       """
   }
 }else{
