@@ -450,6 +450,7 @@ process Read_counting{
   // ls > output.txt
   // """
   """
+    ls > CurrentGFF.text
     featureCounts -a $GFFs -F $featureCounts_Var.F -o Read_Count.txt *.bam -t $featureCounts_Var.t -g $g --extraAttributes $featureCounts_Var.extraAttributes \
     -Q $featureCounts_Var.Q > Read_Stats.txt
   """
