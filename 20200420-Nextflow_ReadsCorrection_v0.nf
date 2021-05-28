@@ -25,6 +25,7 @@ featureCounts_Var=params.featureCounts_Var
 
 // get the species liste
 Species= [params.Specie1, params.Specie2]
+// Species= [params.Specie1, params.Specie2]
 
 // prepare a string that containing the list "-ref <fastafile>" patern that will be included in the bash command.
 SortmeRNA_Ref_Pattern="-ref ${Rm_rRNA.Ref_Databases_Name.join(" --ref " )}"
