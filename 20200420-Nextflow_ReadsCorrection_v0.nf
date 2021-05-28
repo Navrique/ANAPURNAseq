@@ -24,11 +24,11 @@ Hisat2_var=params.Hisat2
 featureCounts_Var=params.featureCounts_Var
 
 // get the species liste
-Species=params.Species
+Species= [params.Specie1, params.Specie2]
 
 // prepare a string that containing the list "-ref <fastafile>" patern that will be included in the bash command.
-SortmeRNA_Ref_Pattern="-ref ${Rm_rRNA.Ref_Databases_Name.join(" -ref " )}"
-
+SortmeRNA_Ref_Pattern="-ref ${Rm_rRNA.Ref_Databases_Name.join(" --ref " )}"
+// println(SortmeRNA_Ref_Pattern)
 // define the path of the index for the database of
 SortmeRNA_DBIndex_Path=Rm_rRNA.DB_Index_Path
 
@@ -73,7 +73,7 @@ Ch_SortmeRNA_DB_File_Address=Channel
 Channel.from(Hisat2_var.GenomeFASTAweb).into { C_Fasta; C_Fasta2}
 C_geneID=Channel.from(featureCounts_Var.g)
 C_GFF=Channel.from(featureCounts_Var.Web_Features_File)
-
+C_Feature=Channel.from(featureCounts_Var.t)
 // prepare channels for the alignement
 C_Genomes=Channel
   .from(Hisat2_var.GenomeID)
@@ -93,7 +93,7 @@ C_para_Hisat2=Channel
 
 C_GFF_n_gID=Channel
   .from(Hisat2_var.GenomeID)
-  .merge(C_GFF,C_geneID )
+  .merge(C_GFF,C_geneID, C_Feature )
   .join(Channel.from(Species))
 
 
@@ -148,7 +148,12 @@ process Build_index {
   // """
   """
   echo "Gooood ${x} envoie le paté avec ${Fasta}" > output.txt
-  gunzip -c $Fasta > ${x}_Ref.fasta
+  if [[ $Fasta == *.txt ]]
+  then
+    gunzip -c $Fasta > ${x}_Ref.fasta
+  else
+    mv $Fasta ${x}_Ref.fasta
+  fi
   hisat2-build ${x}_Ref.fasta $x -p 8
   """
 
@@ -309,12 +314,14 @@ process Remove_rRNA{
   script:
     """
       mkdir -p kvdb/
-      zcat $Input7 > Reads.fastq
-      sortmerna $Ref_Pattern -reads Reads.fastq --num_alignments $Rm_rRNA.num_alignments --kvdb kvdb --idx $Ref_DB_Index -threads 4 --fastx --aligned "With_rRNA_${x7}" --other "No_rRNA_${x7}" --paired_in > Rm_rRNA_${x7}.log
-      gzip No_rRNA_${x7}.fastq
-      gzip With_rRNA_${x7}.fastq
-      rm Reads.fastq
+      mkdir -p readb/
+      #zcat $Input7 > Reads.fastq
+      sortmerna $Ref_Pattern -reads $Input7 --num_alignments $Rm_rRNA.num_alignments --readb readb --kvdb kvdb --idx-dir $Ref_DB_Index --threads 4 --fastx --aligned "With_rRNA_" --other "No_rRNA_" > Rm_rRNA_${x7}.log
+      mv No_rRNA_.fq.gz No_rRNA_${x7}.fastq.gz
+      mv With_rRNA_.fq.gz With_rRNA_${x7}.fastq.gz
+      #rm Reads.fastq
       rm -rf kvdb/
+      rm -rf readb/
     """
 }
 
@@ -440,7 +447,7 @@ process Read_counting{
 
   input:
   tuple val(Species), file(Bam) from Bams
-  tuple val(SameSpecies), path(GFFs), val(g) from C_Sel_GFF
+  tuple val(SameSpecies), path(GFFs), val(g), val(t) from C_Sel_GFF
 
   output:
   file "*"
@@ -451,7 +458,7 @@ process Read_counting{
   // """
   """
     ls > CurrentGFF.text
-    featureCounts -a $GFFs -F $featureCounts_Var.F -o Read_Count.txt *.bam -t $featureCounts_Var.t -g $g --extraAttributes $featureCounts_Var.extraAttributes \
+    featureCounts -a $GFFs -F $featureCounts_Var.F -o Read_Count.txt *.bam -t $t -g $g -O --extraAttributes $featureCounts_Var.extraAttributes \
     -Q $featureCounts_Var.Q > Read_Stats.txt
   """
 }
