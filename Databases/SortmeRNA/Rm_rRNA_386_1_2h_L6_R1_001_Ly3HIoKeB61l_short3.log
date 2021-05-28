@@ -1,0 +1,198 @@
+[process:1376] === Options processing starts ... ===
+Found value: sortmerna
+Found flag: --ref
+Found value: rfam-5s-database-id98.fasta of previous flag: --ref
+Found flag: --ref
+Found value: silva-arc-16s-id95.fasta of previous flag: --ref
+Found flag: --ref
+Found value: silva-arc-23s-id98.fasta of previous flag: --ref
+Found flag: --ref
+Found value: silva-bac-16s-id90.fasta of previous flag: --ref
+Found flag: --ref
+Found value: silva-bac-23s-id98.fasta of previous flag: --ref
+Found flag: --ref
+Found value: silva-euk-18s-id95.fasta of previous flag: --ref
+Found flag: --ref
+Found value: silva-euk-28s-id98.fasta of previous flag: --ref
+Found flag: --reads
+Found value: /media/edurandau/DATA/Eric_Durandau/Sanglard/Labbook/Workbench/Bioinformatics/ANAPURRNA-seq/SampleDataSet/386_1_2h_L6_R1_001_Ly3HIoKeB61l_short1.fastq.gz of previous flag: --reads
+Found flag: --num_alignments
+Found value: 1 of previous flag: --num_alignments
+Found flag: --workdir
+Found value: . of previous flag: --workdir
+Found flag: --threads
+Found value: 1 of previous flag: --threads
+Found flag: --fastx
+Previous flag: --fastx is Boolean. Setting to True
+Found flag: --aligned
+Found value: With_rRNA_386_1_2h_L6_R1_001_Ly3HIoKeB61l_short3 of previous flag: --aligned
+[opt_workdir:994] Using WORKDIR: "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/." as specified
+[process:1460] Processing option: aligned with value: With_rRNA_386_1_2h_L6_R1_001_Ly3HIoKeB61l_short3
+[process:1460] Processing option: fastx with value: 
+[process:1460] Processing option: num_alignments with value: 1
+[process:1460] Processing option: reads with value: /media/edurandau/DATA/Eric_Durandau/Sanglard/Labbook/Workbench/Bioinformatics/ANAPURRNA-seq/SampleDataSet/386_1_2h_L6_R1_001_Ly3HIoKeB61l_short1.fastq.gz
+[opt_reads:97] Processing reads file [1] out of total [1] files
+[process:1460] Processing option: ref with value: rfam-5s-database-id98.fasta
+[opt_ref:157] Processing reference [1] out of total [7] references
+[opt_ref:205] File "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/rfam-5s-database-id98.fasta" exists and is readable
+[process:1460] Processing option: ref with value: silva-arc-16s-id95.fasta
+[opt_ref:157] Processing reference [2] out of total [7] references
+[opt_ref:205] File "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/silva-arc-16s-id95.fasta" exists and is readable
+[process:1460] Processing option: ref with value: silva-arc-23s-id98.fasta
+[opt_ref:157] Processing reference [3] out of total [7] references
+[opt_ref:205] File "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/silva-arc-23s-id98.fasta" exists and is readable
+[process:1460] Processing option: ref with value: silva-bac-16s-id90.fasta
+[opt_ref:157] Processing reference [4] out of total [7] references
+[opt_ref:205] File "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/silva-bac-16s-id90.fasta" exists and is readable
+[process:1460] Processing option: ref with value: silva-bac-23s-id98.fasta
+[opt_ref:157] Processing reference [5] out of total [7] references
+[opt_ref:205] File "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/silva-bac-23s-id98.fasta" exists and is readable
+[process:1460] Processing option: ref with value: silva-euk-18s-id95.fasta
+[opt_ref:157] Processing reference [6] out of total [7] references
+[opt_ref:205] File "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/silva-euk-18s-id95.fasta" exists and is readable
+[process:1460] Processing option: ref with value: silva-euk-28s-id98.fasta
+[opt_ref:157] Processing reference [7] out of total [7] references
+[opt_ref:205] File "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/silva-euk-28s-id98.fasta" exists and is readable
+[process:1460] Processing option: threads with value: 1
+[process:1480] === Options processing done ===
+[process:1481] Alignment type: [best:1 num_alignments:1 min_lis:2 seeds:2]
+[validate_kvdbdir:1227] Key-value DB location "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/./kvdb"
+[validate_kvdbdir:1263] Creating KVDB directory: "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/./kvdb"
+[validate_idxdir:1193] Using index directory: "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/./idx"
+[validate_idxdir:1201] Created index directory - OK
+[validate_readb_dir:1285] Using split reads directory : "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/SortmeRNA/./readb"
+[validate_readb_dir:1293] Created split reads directory - OK
+[main:62] Running command:
+sortmerna --ref rfam-5s-database-id98.fasta --ref silva-arc-16s-id95.fasta --ref silva-arc-23s-id98.fasta --ref silva-bac-16s-id90.fasta --ref silva-bac-23s-id98.fasta --ref silva-euk-18s-id95.fasta --ref silva-euk-28s-id98.fasta --reads /media/edurandau/DATA/Eric_Durandau/Sanglard/Labbook/Workbench/Bioinformatics/ANAPURRNA-seq/SampleDataSet/386_1_2h_L6_R1_001_Ly3HIoKeB61l_short1.fastq.gz --num_alignments 1 --workdir . --threads 1 --fastx --aligned With_rRNA_386_1_2h_L6_R1_001_Ly3HIoKeB61l_short3 
+[build_index:1127] ==== Index building started ====
+[build_index:1190] Begin indexing file rfam-5s-database-id98.fasta of size: 8525326 under index name ./idx/13019673092862722585
+  done.
+
+[build_index:1190] Begin indexing file silva-arc-16s-id95.fasta of size: 3893959 under index name ./idx/3436099190853847617
+  done.
+
+[build_index:1190] Begin indexing file silva-arc-23s-id98.fasta of size: 752022 under index name ./idx/3400685301612210653
+  done.
+
+[build_index:1190] Begin indexing file silva-bac-16s-id90.fasta of size: 19437013 under index name ./idx/15734375058464002811
+  done.
+
+[build_index:1190] Begin indexing file silva-bac-23s-id98.fasta of size: 12911743 under index name ./idx/17299952793705614139
+  done.
+
+[build_index:1190] Begin indexing file silva-euk-18s-id95.fasta of size: 13259584 under index name ./idx/2700646386527218729
+  done.
+
+[build_index:1190] Begin indexing file silva-euk-28s-id98.fasta of size: 14945070 under index name ./idx/1845323523482939374
+  done.
+
+[build_index:2108] ==== Done index building in 129.891 sec ====
+
+[init:108] Readfeed init started
+[define_format:892] file: "/media/edurandau/DATA/Eric_Durandau/Sanglard/Labbook/Workbench/Bioinformatics/ANAPURRNA-seq/SampleDataSet/386_1_2h_L6_R1_001_Ly3HIoKeB61l_short1.fastq.gz" is FASTQ gzipped
+[count_reads:926] started count  ...   
+[next:311] EOF FWD reached. Total reads: 9
+[count_reads:956] done count. Elapsed time: 0.000214602 sec. Total reads: 9
+[init_split_files:978] added file: ./readb/fwd_0.fq.gz
+[split:583] start splitting. Using number of splits equals number of processing threads: 1
+[next:311] EOF FWD reached. Total reads: 9
+[split:694] Done splitting. Reads count: 9 Runtime sec: 0.00114832
+
+[init:135] Readfeed init done in sec [0.00169723]
+[store_to_db:292] Stored Reads statistics to DB:
+     all_reads_count= 9 all_reads_len= 1134 min_read_len= 126 max_read_len= 126 total_aligned= 0 total_aligned_id= 0 total_aligned_cov= 0 total_aligned_id_cov= 0 total_denovo= 0 num_short= 0 reads_matched_per_db= TODO is_stats_calc= 0 is_total_reads_mapped_cov= 0
+
+[align:143] ==== Starting alignment ====
+[align:146] Number of cores: 16
+[align:163] Using number of Processor threads: 1
+[Refstats:60] Index Statistics calculation starts ... done in: 2.04324 sec
+[align:185] Loading index: 0 part: 1/1 Memory KB: 54 ... 
+[align:190] done in [0.327153] sec Memory KB: 185
+[align:193] Loading references ...
+[align:197] done in [0.0302393] sec. Memory KB: 205
+[align2:70] Processor 0 thread 140456788727552 started
+[next:433] EOF FWD reached. Total reads: 9
+[align2:133] Processor 0 thread 140456788727552 done. Processed 9 reads. Skipped already processed: 0 reads Aligned reads (passing E-value): 0 Runtime sec: 0.000473663
+[align:220] done index: 0 part: 1 in 0.000572398 sec Memory KB: 205
+[align:227] Index and References unloaded in 0.0413958 sec. Memory KB: 205
+[align:185] Loading index: 1 part: 1/1 Memory KB: 205 ... 
+[align:190] done in [0.259668] sec Memory KB: 205
+[align:193] Loading references ...
+[align:197] done in [0.00509674] sec. Memory KB: 205
+[align2:70] Processor 0 thread 140456788727552 started
+[next:433] EOF FWD reached. Total reads: 9
+[align2:133] Processor 0 thread 140456788727552 done. Processed 9 reads. Skipped already processed: 0 reads Aligned reads (passing E-value): 0 Runtime sec: 0.000401253
+[align:220] done index: 1 part: 1 in 0.000533791 sec Memory KB: 205
+[align:227] Index and References unloaded in 0.0356214 sec. Memory KB: 205
+[align:185] Loading index: 2 part: 1/1 Memory KB: 205 ... 
+[align:190] done in [0.133425] sec Memory KB: 205
+[align:193] Loading references ...
+[align:197] done in [0.00086294] sec. Memory KB: 205
+[align2:70] Processor 0 thread 140456788727552 started
+[next:433] EOF FWD reached. Total reads: 9
+[align2:133] Processor 0 thread 140456788727552 done. Processed 9 reads. Skipped already processed: 0 reads Aligned reads (passing E-value): 0 Runtime sec: 0.000269582
+[align:220] done index: 2 part: 1 in 0.000366699 sec Memory KB: 205
+[align:227] Index and References unloaded in 0.0142363 sec. Memory KB: 205
+[align:185] Loading index: 3 part: 1/1 Memory KB: 205 ... 
+[align:190] done in [0.687343] sec Memory KB: 503
+[align:193] Loading references ...
+[align:197] done in [0.0266214] sec. Memory KB: 522
+[align2:70] Processor 0 thread 140456788727552 started
+[next:433] EOF FWD reached. Total reads: 9
+[align2:133] Processor 0 thread 140456788727552 done. Processed 9 reads. Skipped already processed: 0 reads Aligned reads (passing E-value): 0 Runtime sec: 0.000658533
+[align:220] done index: 3 part: 1 in 0.000758386 sec Memory KB: 522
+[align:227] Index and References unloaded in 0.14042 sec. Memory KB: 522
+[align:185] Loading index: 4 part: 1/1 Memory KB: 522 ... 
+[align:190] done in [0.521004] sec Memory KB: 383
+[align:193] Loading references ...
+[align:197] done in [0.0169804] sec. Memory KB: 395
+[align2:70] Processor 0 thread 140456788727552 started
+[next:433] EOF FWD reached. Total reads: 9
+[align2:133] Processor 0 thread 140456788727552 done. Processed 9 reads. Skipped already processed: 0 reads Aligned reads (passing E-value): 0 Runtime sec: 0.000585688
+[align:220] done index: 4 part: 1 in 0.000688582 sec Memory KB: 395
+[align:227] Index and References unloaded in 0.0994817 sec. Memory KB: 395
+[align:185] Loading index: 5 part: 1/1 Memory KB: 395 ... 
+[align:190] done in [0.552994] sec Memory KB: 403
+[align:193] Loading references ...
+[align:197] done in [0.0178815] sec. Memory KB: 415
+[align2:70] Processor 0 thread 140456788727552 started
+[next:433] EOF FWD reached. Total reads: 9
+[align2:133] Processor 0 thread 140456788727552 done. Processed 9 reads. Skipped already processed: 0 reads Aligned reads (passing E-value): 1 Runtime sec: 0.000654311
+[align:220] done index: 5 part: 1 in 0.00076168 sec Memory KB: 415
+[align:227] Index and References unloaded in 0.0807997 sec. Memory KB: 415
+[align:185] Loading index: 6 part: 1/1 Memory KB: 289 ... 
+[align:190] done in [0.574311] sec Memory KB: 428
+[align:193] Loading references ...
+[align:197] done in [0.0194528] sec. Memory KB: 443
+[align2:70] Processor 0 thread 140456788727552 started
+[next:433] EOF FWD reached. Total reads: 9
+[align2:133] Processor 0 thread 140456788727552 done. Processed 9 reads. Skipped already processed: 0 reads Aligned reads (passing E-value): 1 Runtime sec: 0.000640168
+[align:220] done index: 6 part: 1 in 0.000723532 sec Memory KB: 443
+[align:227] Index and References unloaded in 0.114228 sec. Memory KB: 443
+[align:237] ==== Done alignment in 3.74984 sec ====
+
+[store_to_db:292] Stored Reads statistics to DB:
+     all_reads_count= 9 all_reads_len= 1134 min_read_len= 126 max_read_len= 126 total_aligned= 1 total_aligned_id= 0 total_aligned_cov= 0 total_aligned_id_cov= 0 total_denovo= 0 num_short= 0 reads_matched_per_db= TODO is_stats_calc= 0 is_total_reads_mapped_cov= 0
+
+[writeSummary:179] ==== Starting summary of alignment statistics ====
+[Refstats:60] Index Statistics calculation starts ... done in: 2.00162 sec
+[write:62] Using summary file: With_rRNA_386_1_2h_L6_R1_001_Ly3HIoKeB61l_short3.log
+[writeSummary:185] ==== Done summary in sec [2.00177] ====
+
+[writeReports:169] === Report generation starts ===
+[writeReports:184] Restored Readstats from DB: 1
+[Refstats:60] Index Statistics calculation starts ... done in: 2.00505 sec
+[validate_out_type:139] Output type: 
+1-file  2-files  paired  paired_in  paired_out  out2  sout  other  otype
+   +                                                                 1
+[set_num_out:162] num_out: 1
+[init:60] num_out: 1
+[writeReports:199] loading reference 0 part 1/1 ... done in 0.0274028 sec
+[report:93] Report Processor: 0 thread: 140456788727552 started. Memory KB: 145
+[next:433] EOF FWD reached. Total reads: 9
+[report:152] Report processor: 0 thread: 140456788727552 done. Processed reads: 9 Invalid reads: 0 Memory KB: 145
+[writeReports:220] done reference 0 part: 1 in 0.000229741 sec
+[writeReports:226] references unloaded in 0.00277179 sec Memory KB: 145
+[strip_path_sfx:169] moving With_rRNA_386_1_2h_L6_R1_001_Ly3HIoKeB61l_short3_0.fq.gz -> "With_rRNA_386_1_2h_L6_R101_Ly3HIoKeB61l_short3_0.fq.gz"
+[writeReports:268] === done Reports in 2.03848 sec ===
+

@@ -1,0 +1,10 @@
+
+
+Building a new DB, current time: 07/17/2020 09:27:52
+New DB name:   /media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Databases/LocalBlast/Ca_Genes
+New DB title:  "/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/DNA_Sequences/Ca_Genes.fa"
+Sequence type: Nucleotide
+Keep Linkouts: T
+Keep MBits: T
+Maximum file size: 1000000000B
+Adding sequences from FASTA; added 16 sequences in 0.000607014 seconds.

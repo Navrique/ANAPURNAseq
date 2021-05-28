@@ -1,0 +1,30 @@
+# format of this file:
+#   time
+#   num_orig_files
+#   num_sense
+#   num_splits
+#   num_reads_tot
+#   [
+#     file
+#     size
+#     reads
+#     zip
+#     fastq/a
+#   ] for each file both original and split
+
+Thu May 27 12:32:51 2021
+
+1
+1
+1
+9
+/media/edurandau/DATA/Eric_Durandau/Sanglard/Labbook/Workbench/Bioinformatics/ANAPURRNA-seq/SampleDataSet/386_1_2h_L6_R1_001_Ly3HIoKeB61l_short1.fastq.gz
+1121
+9
+1
+fastq
+./readb/fwd_0.fq.gz
+1076
+9
+1
+fastq
