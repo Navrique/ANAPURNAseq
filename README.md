@@ -1,17 +1,17 @@
-# ANAPURRNAseq : Automated Nexflow Alignement Pipeline for Uncleared Reads from RNAseq
+# ANAPURNA-seq : Automated Nextflow Alignment Pipeline for Unprocessed RNA-seq
 
 > #Bioinformatics #pipeline 
 
 ## Tasks
 
-- [ ] Test the pipeline on the a dataset  in [Data/Sample_dataset](Data/Sample_dataset)
-  - [ ] adapt the code to reduce space usage at the rRNA step
-  - [ ] test on [Data/Sample_dataset](Data/Sample_dataset)
+- [x] Test the pipeline on the a dataset  in [Data/Sample_dataset](Data/Sample_dataset)
+  - [x] adapt the code to reduce space usage at the rRNA step
+  - [x] test on [Data/Sample_dataset](Data/Sample_dataset)
 - [ ] [README](Bioinformatics/ReadCountPipeline/README.md)
   - [ ] Usage 
   - [ ] Step description
   - [ ] introduction
-- [ ] publish the pipeline on Github
+- [x] publish the pipeline on Github
 
 ## Done
 

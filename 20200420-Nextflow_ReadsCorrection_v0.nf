@@ -149,10 +149,11 @@ process Build_index {
   // """
   """
   echo "Gooood ${x} envoie le paté avec ${Fasta}" > output.txt
-  if [[ $Fasta == *.txt ]]
+  if [[ $Fasta == *.gz ]]
   then
     gunzip -c $Fasta > ${x}_Ref.fasta
   else
+    echo "pas top"
     mv $Fasta ${x}_Ref.fasta
   fi
   hisat2-build ${x}_Ref.fasta $x -p 8
