@@ -3,3 +3,5 @@ SampleDataSet/.*
 SampleDataSet/Corre*
 SampleDataSet/Results/
 SampleDataSet/work/
+Databases/SortmeRNA/DB_Index/*
+.git*
