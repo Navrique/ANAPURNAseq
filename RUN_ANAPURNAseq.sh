@@ -47,10 +47,10 @@ if ret=`zenity --list --width=1000 --height=300 \
           exit
         else
           #NextFlow File
-          Nf_File="/media/edurandau/DATA/Eric_Durandau/Sanglard/Labbook/Workbench/Bioinformatics/ANAPURRNA-seq/20200420-Nextflow_ReadsCorrection_v0.nf"
+          Nf_File="20200420-Nextflow_ReadsCorrection_v0.nf"
 
           #NextFlow config file
-          Cf_File="/media/edurandau/DATA/Eric_Durandau/Sanglard/Labbook/Workbench/Bioinformatics/ANAPURRNA-seq/ANAPURNA_Config_.config"
+          Cf_File="ANAPURNA_Config_.config"
 
           nextflow $Nf_File -c $Cf_File --Specie1 $Specie1 --Specie2 $Specie2 -resume
         fi
