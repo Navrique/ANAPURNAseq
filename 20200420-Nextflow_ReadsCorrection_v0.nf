@@ -294,7 +294,7 @@ process Filter_Low_Complexity {
     file "LowComp_${x6}.fastq.gz"
   script:
     """
-    bbduk.sh in="$Input6" out=HighComp_${x6}.fastq.gz outm=LowComp_${x6}.fastq.gz entropy=$Complex_Filter.entropy
+    bbduk.sh -Xmx2g in="$Input6" out=HighComp_${x6}.fastq.gz outm=LowComp_${x6}.fastq.gz entropy=$Complex_Filter.entropy
     """
 }
 
