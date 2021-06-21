@@ -55,7 +55,7 @@ if ret=`zenity --list --width=1000 --height=300 \
           #NextFlow config file
           Cf_File="$BASEDIR/ANAPURNA_Config_.config"
 
-          nextflow $Nf_File -c $Cf_File --Specie1 $Specie1 --Specie2 $Specie2 -resume
+          $BASEDIR/nextflow $Nf_File -c $Cf_File --Specie1 $Specie1 --Specie2 $Specie2 -resume
         fi
 
       else
