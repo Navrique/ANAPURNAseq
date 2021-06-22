@@ -5,7 +5,7 @@
 # echo $Path
 
 if ret=`zenity  --file-selection --title="Choose the folder containing raw fastq files" \
-  --filename="/media/edurandau/DATA/Eric_Durandau/Sanglard/Data/Sequencing/Fastq_gz/"  --directory`
+  --filename="~"  --directory`
   then
     Path=$ret
   else
@@ -13,7 +13,8 @@ if ret=`zenity  --file-selection --title="Choose the folder containing raw fastq
     exit
   fi
 
-
+# Get the base directory
+BASEDIR=$(dirname "$0")
 
 #Choose genomes, you can choose until two genomes from the list :["Ca", "Cg", "Mm","Hs", "Mc", "Rm"]
 
@@ -25,7 +26,8 @@ if ret=`zenity --list --width=1000 --height=300 \
     "" "Mm" "Mus musculus" "GRCm38.p6" "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Mus_musculus/latest_assembly_versions/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.fna.gz" "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Mus_musculus/latest_assembly_versions/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.gff.gz" \
     "" "Hs" "Homo sapiens" "GRCh38" "ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz" "ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.gff.gz" \
     "" "Mc" "Mucor circinelloides" "1006Phmd" "Mucor_circinelloides_1006Phmod.fasta" "Mucor_circinelloides_1006Phmod.gff" \
-    "" "Rm" "Rhizopus microscopus" "ATCC52813" "Rhizopus_microsporus_ATCC52813mod.fasta" "Rhizopus_microsporus_ATCC52813mod.gff"`
+    "" "Rm" "Rhizopus microscopus" "ATCC52813" "Rhizopus_microsporus_ATCC52813mod.fasta" "Rhizopus_microsporus_ATCC52813mod.gff" \
+    "" "Cl" "Candida lusitaniae" "DSY4606_V37" "Candida_lusitaniae_DSY4606_V37.fasta.gz" "Candida_lusitaniae_DSY4606_V37.gff.gz"`
 
     then
     Specie1=$ret
@@ -38,7 +40,8 @@ if ret=`zenity --list --width=1000 --height=300 \
         "" "Mm" "Mus musculus" "GRCm38.p6" "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Mus_musculus/latest_assembly_versions/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.fna.gz" "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Mus_musculus/latest_assembly_versions/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.gff.gz" \
         "" "Hs" "Homo sapiens" "GRCh38" "ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz" "ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.gff.gz" \
         "" "Mc" "Mucor circinelloides" "1006Phmd" "Mucor_circinelloides_1006Phmod.fasta" "Mucor_circinelloides_1006Phmod.gff" \
-        "" "Rm" "Rhizopus microscopus" "ATCC52813" "Rhizopus_microsporus_ATCC52813mod.fasta" "Rhizopus_microsporus_ATCC52813mod.gff")
+        "" "Rm" "Rhizopus microscopus" "ATCC52813" "Rhizopus_microsporus_ATCC52813mod.fasta" "Rhizopus_microsporus_ATCC52813mod.gff" \
+        "" "Cl" "Candida lusitaniae" "DSY4606_V37" "Candida_lusitaniae_DSY4606_V37.fasta.gz" "Candida_lusitaniae_DSY4606_V37.gff.gz")
         cd $Path
 
         if test -f *.fastq
@@ -47,12 +50,12 @@ if ret=`zenity --list --width=1000 --height=300 \
           exit
         else
           #NextFlow File
-          Nf_File="20200420-Nextflow_ReadsCorrection_v0.nf"
+          Nf_File="$BASEDIR/20200420-Nextflow_ReadsCorrection_v0.nf"
 
           #NextFlow config file
-          Cf_File="ANAPURNA_Config_.config"
+          Cf_File="$BASEDIR/ANAPURNA_Config_.config"
 
-          nextflow $Nf_File -c $Cf_File --Specie1 $Specie1 --Specie2 $Specie2 -resume
+          $BASEDIR/nextflow $Nf_File -c $Cf_File --Specie1 $Specie1 --Specie2 $Specie2 -resume
         fi
 
       else
