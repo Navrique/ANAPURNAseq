@@ -267,7 +267,8 @@ process Contamiation_Removal {
 
   input:
     tuple x5, file(Input5) from WOArtifact_ch
-    val Ref from Conta_Removal.ref
+    // val Ref from Conta_Removal.ref
+    path Ref from Conta_Removal.ref
 
   output:
     file "Contaminants_stats_${x5}.txt"
@@ -276,7 +277,7 @@ process Contamiation_Removal {
 
   script:
   """
-    wget $Ref -O phix174_ill.ref.fa.gz
+    # wget $Ref -O phix174_ill.ref.fa.gz
     bbduk.sh -Xmx2g in=$Input5 out="NoConta_${x5}.fastq.gz" outm=MatchConta_${x5}.fastq.gz ref="phix174_ill.ref.fa.gz" k=$Conta_Removal.k hdist=$Conta_Removal.hdist stats=Contaminants_stats_${x5}.txt
   """
 }
