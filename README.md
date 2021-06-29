@@ -60,15 +60,16 @@ All the steps have been embedded in a *Nextflow* pipeline. Nextflow enables scal
 
 ### Table 1.2: List of genomes currently available in ANAPURNA-seq <a name="table1.2"></a>
 
-| Specie               | Strain               |
-| -------------------- | -------------------- |
-| *Candida albicans*   | SC5314 [14][14][^14] |
-| Candida glabrata     | DSY562               |
-| Mus musculus         | GRCm38 [15][15][^15] |
-| Homo sapiens         | GRCh38 [16][16][^16] |
-| Mucor circinelloides | 1006Phmd             |
-| Rhizopus microsporus | ATCC52813            |
-| Candida lusitaniae   | DSY4606_V37          |
+| Specie                | Strain               |
+| --------------------- | -------------------- |
+| *Candida albicans*    | SC5314 [14][14][^14] |
+| Candida glabrata      | DSY562               |
+| Mus musculus          | GRCm38 [15][15][^15] |
+| Homo sapiens          | GRCh38 [16][16][^16] |
+| Mucor circinelloides  | 1006Phmd             |
+| Rhizopus microsporus  | ATCC52813            |
+| Candida lusitaniae    | DSY4606_V37          |
+| Aspergillus fumigatus | Af_293B              |
 
 ## 4. References
 
