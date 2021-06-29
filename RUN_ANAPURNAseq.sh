@@ -3,6 +3,8 @@
 # Choose the path containing raw fastq files
 # Path=$(zenity  --file-selection --title="Choose the folder containing raw fastq files" --file-filter=""Downloads" "Desktop"" --directory)
 # echo $Path
+# source ~/.bashrc
+echo $PATH
 
 if ret=`zenity  --file-selection --title="Choose the folder containing raw fastq files" \
   --filename="~"  --directory`
@@ -14,7 +16,7 @@ if ret=`zenity  --file-selection --title="Choose the folder containing raw fastq
   fi
 
 # Get the base directory
-BASEDIR=$(dirname "$0")
+BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 #Choose genomes, you can choose until two genomes from the list :["Ca", "Cg", "Mm","Hs", "Mc", "Rm"]
 
@@ -27,6 +29,7 @@ if ret=`zenity --list --width=1000 --height=300 \
     "" "Hs" "Homo sapiens" "GRCh38" "ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz" "ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.gff.gz" \
     "" "Mc" "Mucor circinelloides" "1006Phmd" "Mucor_circinelloides_1006Phmod.fasta" "Mucor_circinelloides_1006Phmod.gff" \
     "" "Rm" "Rhizopus microscopus" "ATCC52813" "Rhizopus_microsporus_ATCC52813mod.fasta" "Rhizopus_microsporus_ATCC52813mod.gff" \
+    "" "Af" "Aspergillus fumigatus" "Af_293B" "Af_293B.fasta" "Af_293B.gff" \
     "" "Cl" "Candida lusitaniae" "DSY4606_V37" "Candida_lusitaniae_DSY4606_V37.fasta.gz" "Candida_lusitaniae_DSY4606_V37.gff.gz"`
 
     then
@@ -41,14 +44,17 @@ if ret=`zenity --list --width=1000 --height=300 \
           "" "Hs" "Homo sapiens" "GRCh38" "ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz" "ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.gff.gz" \
           "" "Mc" "Mucor circinelloides" "1006Phmd" "Mucor_circinelloides_1006Phmod.fasta" "Mucor_circinelloides_1006Phmod.gff" \
           "" "Rm" "Rhizopus microscopus" "ATCC52813" "Rhizopus_microsporus_ATCC52813mod.fasta" "Rhizopus_microsporus_ATCC52813mod.gff" \
+          "" "Af" "Aspergillus fumigatus" "Af_293B" "Af_293B.fasta" "Af_293B.gff" \
           "" "Cl" "Candida lusitaniae" "DSY4606_V37" "Candida_lusitaniae_DSY4606_V37.fasta.gz" "Candida_lusitaniae_DSY4606_V37.gff.gz")
           cd $Path
 
-          if test -f *.fastq.gz
-          then
+          FastqGz=$(find . -type f -name "*.fastq.gz")
+          # if test -f *.fastq.gz ; then
+          if ! [[ (-n $FastqGz)]] ; then
             zenity --error --text "The folder does not contains fastq files. Start again." --width=300 --height=300
             exit
           else
+            echo $BASEDIR
             #NextFlow File
             Nf_File="$BASEDIR/20200420-Nextflow_ReadsCorrection_v0.nf"
 
